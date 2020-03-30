@@ -1,11 +1,11 @@
+import store from '@state/store'
+import routes from './routes'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // https://github.com/declandewet/vue-meta
 import VueMeta from 'vue-meta'
 // Adds a loading bar at the top during page loads.
 import NProgress from 'nprogress/nprogress'
-import store from '@state/store'
-import routes from './routes'
 
 Vue.use(VueRouter)
 Vue.use(VueMeta, {

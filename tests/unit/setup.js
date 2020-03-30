@@ -1,20 +1,20 @@
-import fs from 'fs'
-import path from 'path'
-import Vue from 'vue'
-import Vuex from 'vuex'
-import axios from 'axios'
+import fs from 'fs';
+import path from 'path';
+import Vue from 'vue';
+import Vuex from 'vuex';
+import axios from 'axios';
 
 // ===
 // Utility functions
 // ===
 
 // https://vue-test-utils.vuejs.org/
-const vueTestUtils = require('@vue/test-utils')
+const vueTestUtils = require('@vue/test-utils');
 // https://lodash.com/
-const _ = require('lodash')
+const _ = require('lodash');
 _.mixin({
   pascalCase: _.flow(_.camelCase, _.upperFirst),
-})
+});
 
 // ===
 // Configure Axios
@@ -22,7 +22,7 @@ _.mixin({
 
 // Force Axios to use the XHR adapter so that it behaves
 // more like it would in a browser environment.
-axios.defaults.adapter = require('axios/lib/adapters/xhr')
+axios.defaults.adapter = require('axios/lib/adapters/xhr');
 
 // ===
 // Configure Vue
@@ -31,7 +31,7 @@ axios.defaults.adapter = require('axios/lib/adapters/xhr')
 // Don't warn about not using the production build of Vue, as
 // we care more about the quality of errors than performance
 // for tests.
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 // ===
 // Register global components
@@ -39,66 +39,71 @@ Vue.config.productionTip = false
 
 const globalComponentFiles = fs
   .readdirSync(path.join(__dirname, '../../src/components'))
-  .filter((fileName) => /^_base-.+\.vue$/.test(fileName))
+  .filter((fileName) => /^_base-.+\.vue$/.test(fileName));
 
 for (const fileName of globalComponentFiles) {
-  const componentName = _.pascalCase(fileName.match(/^_(base-.+)\.vue$/)[1])
-  const componentConfig = require('../../src/components/' + fileName)
-  Vue.component(componentName, componentConfig.default || componentConfig)
+  const componentName = _.pascalCase(fileName.match(/^_(base-.+)\.vue$/)[1]);
+  const componentConfig = require('../../src/components/' + fileName);
+  Vue.component(componentName, componentConfig.default || componentConfig);
 }
 
 // ===
 // Mock window properties not handled by jsdom
 // ===
+// TODO: do we need this? I believe this was added to Jest in mid 2018
 
 Object.defineProperty(window, 'localStorage', {
   value: (function() {
-    let store = {}
+    let store = {};
     return {
       getItem: function(key) {
-        return store[key] || null
+        return store[key] || null;
       },
       setItem: function(key, value) {
-        store[key] = value.toString()
+        store[key] = value.toString();
       },
       clear: function() {
-        store = {}
+        store = {};
       },
-    }
+    };
   })(),
-})
+});
 
 // ===
 // Console handlers
 // ===
 
 // Make console.error throw, so that Jest tests fail
-const error = console.error
+const error = console.error;
 console.error = function(message) {
-  error.apply(console, arguments)
+  error.apply(console, arguments);
   // NOTE: You can whitelist some `console.error` messages here
   //       by returning if the `message` value is acceptable.
-  throw message instanceof Error ? message : new Error(message)
-}
+  throw message instanceof Error ? message : new Error(message);
+};
 
 // Make console.warn throw, so that Jest tests fail
-const warn = console.warn
+const warn = console.warn;
 console.warn = function(message) {
-  warn.apply(console, arguments)
+  warn.apply(console, arguments);
   // NOTE: You can whitelist some `console.warn` messages here
   //       by returning if the `message` value is acceptable.
-  throw message instanceof Error ? message : new Error(message)
-}
+  throw message instanceof Error ? message : new Error(message);
+};
 
 // ===
 // Global helpers
 // ===
 
+// TODO: I don't think these are necessary for Typescript because you import
+// vue-test-utils in the test file and get access to them. I don't see what value
+// this adds
+
 // https://vue-test-utils.vuejs.org/api/#mount
-global.mount = vueTestUtils.mount
+global.mount = vueTestUtils.mount;
 
 // https://vue-test-utils.vuejs.org/api/#shallowmount
-global.shallowMount = vueTestUtils.shallowMount
+global.shallowMount = vueTestUtils.shallowMount;
 
 // A special version of `shallowMount` for view components
 global.shallowMountView = (Component, options = {}) => {
@@ -108,26 +113,26 @@ global.shallowMountView = (Component, options = {}) => {
       Layout: {
         functional: true,
         render(h, { slots }) {
-          return <div>{slots().default}</div>
+          return <div>{slots().default}</div>;
         },
       },
       ...(options.stubs || {}),
     },
-  })
-}
+  });
+};
 
 // A helper for creating Vue component mocks
 global.createComponentMocks = ({ store, router, style, mocks, stubs }) => {
   // Use a local version of Vue, to avoid polluting the global
   // Vue and thereby affecting other tests.
   // https://vue-test-utils.vuejs.org/api/#createlocalvue
-  const localVue = vueTestUtils.createLocalVue()
-  const returnOptions = { localVue }
+  const localVue = vueTestUtils.createLocalVue();
+  const returnOptions = { localVue };
 
   // https://vue-test-utils.vuejs.org/api/options.html#stubs
-  returnOptions.stubs = stubs || {}
+  returnOptions.stubs = stubs || {};
   // https://vue-test-utils.vuejs.org/api/options.html#mocks
-  returnOptions.mocks = mocks || {}
+  returnOptions.mocks = mocks || {};
 
   // Converts a `store` option shaped like:
   //
@@ -145,11 +150,11 @@ global.createComponentMocks = ({ store, router, style, mocks, stubs }) => {
   // to a store instance, with each module namespaced by
   // default, just like in our app.
   if (store) {
-    localVue.use(Vuex)
+    localVue.use(Vuex);
     returnOptions.store = new Vuex.Store({
       modules: Object.keys(store)
         .map((moduleName) => {
-          const storeModule = store[moduleName]
+          const storeModule = store[moduleName];
           return {
             [moduleName]: {
               state: storeModule.state || {},
@@ -160,29 +165,29 @@ global.createComponentMocks = ({ store, router, style, mocks, stubs }) => {
                   ? true
                   : storeModule.namespaced,
             },
-          }
+          };
         })
         .reduce((moduleA, moduleB) => Object.assign({}, moduleA, moduleB), {}),
-    })
+    });
   }
 
   // If using `router: true`, we'll automatically stub out
   // components from Vue Router.
   if (router) {
-    returnOptions.stubs['router-link'] = true
-    returnOptions.stubs['router-view'] = true
+    returnOptions.stubs['router-link'] = true;
+    returnOptions.stubs['router-view'] = true;
   }
 
   // If a `style` object is provided, mock some styles.
   if (style) {
-    returnOptions.mocks.$style = style
+    returnOptions.mocks.$style = style;
   }
 
-  return returnOptions
-}
+  return returnOptions;
+};
 
 global.createModuleStore = (vuexModule, options = {}) => {
-  vueTestUtils.createLocalVue().use(Vuex)
+  vueTestUtils.createLocalVue().use(Vuex);
   const store = new Vuex.Store({
     ..._.cloneDeep(vuexModule),
     modules: {
@@ -198,12 +203,12 @@ global.createModuleStore = (vuexModule, options = {}) => {
     // failing test.
     // https://vuex.vuejs.org/guide/strict.html
     strict: true,
-  })
+  });
   axios.defaults.headers.common.Authorization = options.currentUser
     ? options.currentUser.token
-    : ''
+    : '';
   if (vuexModule.actions.init) {
-    store.dispatch('init')
+    store.dispatch('init');
   }
-  return store
-}
+  return store;
+};

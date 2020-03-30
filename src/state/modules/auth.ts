@@ -1,11 +1,24 @@
 import axios from 'axios'
+import { ActionContext } from "vuex";
 
-export const state = {
+export interface user {
+  name: string;
+  token: string;
+}
+export interface authState{
+  currentUser: user;
+}
+export interface userLogin {
+  username: string;
+  password: string;
+}
+
+export const state: authState = {
   currentUser: getSavedState('auth.currentUser'),
 }
 
 export const mutations = {
-  SET_CURRENT_USER(state, newValue) {
+  SET_CURRENT_USER(state: authState, newValue: user) {
     state.currentUser = newValue
     saveState('auth.currentUser', newValue)
     setDefaultAuthHeaders(state)
@@ -14,7 +27,7 @@ export const mutations = {
 
 export const getters = {
   // Whether the user is currently logged in.
-  loggedIn(state) {
+  loggedIn(state: authState) {
     return !!state.currentUser
   },
 }
@@ -22,17 +35,17 @@ export const getters = {
 export const actions = {
   // This is automatically run in `src/state/store.js` when the app
   // starts, along with any other actions named `init` in other modules.
-  init({ state, dispatch }) {
+  init({ state, dispatch }: ActionContext<authState, unknown>) {
     setDefaultAuthHeaders(state)
     dispatch('validate')
   },
 
   // Logs in the current user.
-  logIn({ commit, dispatch, getters }, { username, password } = {}) {
-    if (getters.loggedIn) return dispatch('validate')
+  logIn({ commit, dispatch, getters }: ActionContext<authState, unknown>, login: userLogin | null = null) {
+    if (getters.loggedIn || login == null) return dispatch('validate')
 
     return axios
-      .post('/api/session', { username, password })
+      .post('/api/session', { username: login.username, password: login.password })
       .then((response) => {
         const user = response.data
         commit('SET_CURRENT_USER', user)
@@ -41,13 +54,13 @@ export const actions = {
   },
 
   // Logs out the current user.
-  logOut({ commit }) {
+  logOut({ commit }: ActionContext<authState, unknown>) {
     commit('SET_CURRENT_USER', null)
   },
 
   // Validates the current user's token and refreshes it
   // with new data from the API.
-  validate({ commit, state }) {
+  validate({ commit, state }: ActionContext<authState, unknown>) {
     if (!state.currentUser) return Promise.resolve(null)
 
     return axios
@@ -68,19 +81,28 @@ export const actions = {
   },
 }
 
+export const store = {
+  state,
+  mutations,
+  getters,
+  actions
+};
+
 // ===
 // Private helpers
 // ===
 
-function getSavedState(key) {
-  return JSON.parse(window.localStorage.getItem(key))
+function getSavedState(key: string) {
+  let obj = window.localStorage.getItem(key);
+  if (obj == null) return null;
+  return JSON.parse(obj);
 }
 
-function saveState(key, state) {
+function saveState(key: string, state: user): void {
   window.localStorage.setItem(key, JSON.stringify(state))
 }
 
-function setDefaultAuthHeaders(state) {
+function setDefaultAuthHeaders(state:authState): void {
   axios.defaults.headers.common.Authorization = state.currentUser
     ? state.currentUser.token
     : ''

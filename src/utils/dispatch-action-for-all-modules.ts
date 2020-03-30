@@ -2,8 +2,8 @@ import allModules from '@state/modules'
 import store from '@state/store'
 
 export default function dispatchActionForAllModules(
-  actionName,
-  { modules = allModules, modulePrefix = '', flags = {} } = {}
+  actionName: string,
+  { modules = allModules, modulePrefix = '', dispatchGlobal = false } = {}
 ) {
   // For every module...
   for (const moduleName in modules) {
@@ -16,7 +16,7 @@ export default function dispatchActionForAllModules(
       if (moduleDefinition.namespaced) {
         store.dispatch(`${modulePrefix}${moduleName}/${actionName}`)
       } else {
-        flags.dispatchGlobal = true
+        dispatchGlobal = true
       }
     }
 
@@ -26,14 +26,14 @@ export default function dispatchActionForAllModules(
       dispatchActionForAllModules(actionName, {
         modules: moduleDefinition.modules,
         modulePrefix: modulePrefix + moduleName + '/',
-        flags,
+        dispatchGlobal,
       })
     }
   }
 
   // If this is the root and at least one non-namespaced module
   // was found with the action...
-  if (!modulePrefix && flags.dispatchGlobal) {
+  if (!modulePrefix && dispatchGlobal) {
     // Dispatch the action globally.
     store.dispatch(actionName)
   }

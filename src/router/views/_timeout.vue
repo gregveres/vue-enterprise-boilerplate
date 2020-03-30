@@ -1,7 +1,7 @@
 <script>
-import axios from 'axios'
-import Layout from '@layouts/main.vue'
-import LoadingView from './_loading.vue'
+import Layout from '@layouts/main.vue';
+import LoadingView from './_loading.vue';
+import axios from 'axios';
 
 export default {
   page: {
@@ -14,19 +14,19 @@ export default {
   data() {
     return {
       offlineConfirmed: false,
-    }
+    };
   },
   beforeCreate() {
     axios
       .head('/api/ping')
       .then(() => {
-        window.location.reload()
+        window.location.reload();
       })
       .catch(() => {
-        this.offlineConfirmed = true
-      })
+        this.offlineConfirmed = true;
+      });
   },
-}
+};
 </script>
 
 <template>

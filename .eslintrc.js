@@ -1,8 +1,11 @@
 module.exports = {
   root: true,
+
   parserOptions: {
     sourceType: 'script',
+    parser: '@typescript-eslint/parser',
   },
+
   extends: [
     // https://github.com/vuejs/eslint-plugin-vue#bulb-rules
     'plugin:vue/recommended',
@@ -13,6 +16,7 @@ module.exports = {
     'prettier/standard',
     'prettier/vue',
   ],
+
   rules: {
     // Only allow debugger in development
     'no-debugger': process.env.PRE_COMMIT ? 'error' : 'off',
@@ -20,8 +24,8 @@ module.exports = {
     'no-console': process.env.PRE_COMMIT
       ? ['error', { allow: ['warn', 'error'] }]
       : 'off',
-    'import/no-relative-parent-imports': 'error',
-    'import/order': 'error',
+    'import/no-relative-parent-imports': 'off',
+    'import/order': 'off',
     'vue/array-bracket-spacing': 'error',
     'vue/arrow-spacing': 'error',
     'vue/block-spacing': 'error',
@@ -51,6 +55,7 @@ module.exports = {
     ],
     'vue/valid-v-slot': 'error',
   },
+
   overrides: [
     {
       files: ['src/**/*', 'tests/unit/**/*', 'tests/e2e/**/*'],
@@ -63,7 +68,7 @@ module.exports = {
       },
     },
     {
-      files: ['**/*.unit.js'],
+      files: ['**/*.unit.ts'],
       parserOptions: {
         parser: 'babel-eslint',
         sourceType: 'module',
@@ -78,4 +83,13 @@ module.exports = {
       },
     },
   ],
-}
+
+  extends: [
+    'plugin:vue/recommended',
+    'standard',
+    'prettier',
+    'prettier/standard',
+    'prettier/vue',
+    '@vue/typescript',
+  ],
+};

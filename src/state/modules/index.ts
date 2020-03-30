@@ -2,12 +2,17 @@
 // will mirror [sub-]directory hierarchy and modules are namespaced
 // as the camelCase equivalent of their file name.
 
-import camelCase from 'lodash/camelCase'
+import { camelCase } from "lodash";
+import { Module } from "vuex";
 
-const modulesCache = {}
-const storeData = { modules: {} }
+interface ModuleProxy extends Module<unknown,unknown> {
+  modules: {[index:string]: Module<unknown,unknown> };
 
-;(function updateModules() {
+}
+const modulesCache: {[index:string]:unknown} = {}
+const storeData: ModuleProxy = { modules: {} };
+
+(function updateModules() {
   // Allow us to dynamically require all Vuex module files.
   // https://webpack.js.org/guides/dependency-management/#require-context
   const requireModule = require.context(
@@ -32,7 +37,7 @@ const storeData = { modules: {} }
     modulesCache[fileName] = moduleDefinition
 
     // Get the module path as an array.
-    const modulePath = fileName
+    const modulePath: string[] = fileName
       // Remove the "./" from the beginning.
       .replace(/^\.\//, '')
       // Remove the file extension from the end.
@@ -46,7 +51,7 @@ const storeData = { modules: {} }
     const { modules } = getNamespace(storeData, modulePath)
 
     // Add the module to our modules object.
-    modules[modulePath.pop()] = {
+    modules[modulePath.pop() ?? ''] = {
       // Modules are namespaced by default.
       namespaced: true,
       ...moduleDefinition,
@@ -66,16 +71,16 @@ const storeData = { modules: {} }
 })()
 
 // Recursively get the namespace of a Vuex module, even if nested.
-function getNamespace(subtree, path) {
-  if (path.length === 1) return subtree
-
+function getNamespace(subtree: ModuleProxy, path: string[]): ModuleProxy {
   const namespace = path.shift()
+  if (namespace === undefined) return subtree
+
   subtree.modules[namespace] = {
     modules: {},
     namespaced: true,
     ...subtree.modules[namespace],
   }
-  return getNamespace(subtree.modules[namespace], path)
+  return getNamespace(subtree.modules[namespace] as ModuleProxy, path)
 }
 
 export default storeData.modules
