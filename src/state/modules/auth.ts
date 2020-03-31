@@ -1,17 +1,27 @@
 import axios from 'axios'
 import { ActionContext } from "vuex";
 
+// ===
+// Interfaces
+// ===
+
 export interface user {
+  id: number;
+  username: string;
   name: string;
   token: string;
 }
 export interface authState{
   currentUser: user;
 }
-export interface userLogin {
+export interface loginInfo {
   username: string;
   password: string;
 }
+
+// ===
+// Module components
+// ===
 
 export const state: authState = {
   currentUser: getSavedState('auth.currentUser'),
@@ -41,7 +51,7 @@ export const actions = {
   },
 
   // Logs in the current user.
-  logIn({ commit, dispatch, getters }: ActionContext<authState, unknown>, login: userLogin | null = null) {
+  logIn({ commit, dispatch, getters }: ActionContext<authState, unknown>, login: loginInfo | null = null) {
     if (getters.loggedIn || login == null) return dispatch('validate')
 
     return axios

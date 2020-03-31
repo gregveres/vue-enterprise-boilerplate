@@ -1,4 +1,6 @@
 import * as usersModule from './users'
+import { Store } from 'vuex';
+import { createModuleStore } from "@/tests/unit/VueHelpers";
 
 describe('@state/modules/users', () => {
   it('exports a valid Vuex module', () => {
@@ -6,9 +8,9 @@ describe('@state/modules/users', () => {
   })
 
   describe('in a store when logged in', () => {
-    let store
+    let store: Store<usersModule.userState>;
     beforeEach(() => {
-      store = createModuleStore(usersModule, {
+      store = createModuleStore(usersModule.store, {
         currentUser: validUserExample,
       })
     })
@@ -39,7 +41,7 @@ describe('@state/modules/users', () => {
   })
 
   describe('in a store when logged out', () => {
-    let store
+    let store: Store<usersModule.userState>;
     beforeEach(() => {
       store = createModuleStore(usersModule)
     })

@@ -3,6 +3,7 @@ import axios from "axios";
 import { cloneDeep } from "lodash";
 import { createLocalVue } from "@vue/test-utils";
 import { authState } from "@state/modules/auth";
+import {  } from 'jest';
 
 export function createModuleStore<T>(vuexModule: StoreOptions<T>, options: authState | null = null): Store<T> {
   createLocalVue().use(Vuex)

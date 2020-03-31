@@ -1,21 +1,38 @@
 import axios from 'axios'
+import { ActionContext } from "vuex";
+import { authState, user } from './auth';
 
-export const state = {
+// ===
+// Interfaces
+// ===
+
+export interface userState {
+  cached: user[];
+}
+// ===
+// Module components
+// ===
+
+export const state: userState = {
   cached: [],
 }
 
 export const getters = {}
 
 export const mutations = {
-  CACHE_USER(state, newUser) {
+  CACHE_USER(state: userState, newUser: user) {
     state.cached.push(newUser)
   },
 }
 
+interface rootState {
+  auth: authState;
+}
+
 export const actions = {
-  fetchUser({ commit, state, rootState }, { username }) {
+  fetchUser({ commit, state, rootState }: ActionContext<userState, unknown>, { username }: user) {
     // 1. Check if we already have the user as a current user.
-    const { currentUser } = rootState.auth
+    const { currentUser } = (rootState as rootState).auth;
     if (currentUser && currentUser.username === username) {
       return Promise.resolve(currentUser)
     }
@@ -35,3 +52,10 @@ export const actions = {
     })
   },
 }
+
+export const store = {
+  state,
+  mutations,
+  getters,
+  actions
+};

@@ -1,12 +1,12 @@
 import * as authModule from './auth'
 import axios from 'axios'
-import { createModuleStore } from "@/tests/unit/VuexHelpers";
-import { Module, Store } from 'vuex';
+import { createModuleStore } from "@/tests/unit/VueHelpers";
+import { Store } from 'vuex';
 
 describe('@state/modules/auth', () => {
-  // it('exports a valid Vuex module', () => {
-  //   expect(authModule).toBeAVuexModule()
-  // })
+  it('exports a valid Vuex module', () => {
+    expect(authModule).toBeAVuexModule()
+  })
 
   describe('in a store', () => {
     let store: Store<authModule.authState>;
