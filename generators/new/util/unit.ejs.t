@@ -1,5 +1,5 @@
 ---
-to: "src/utils/<%= h.changeCase.kebab(name) %>.unit.js"
+to: "src/utils/<%= h.changeCase.kebab(name) %>.unit.ts"
 ---
 <%
   const fileName = h.changeCase.kebab(name)
