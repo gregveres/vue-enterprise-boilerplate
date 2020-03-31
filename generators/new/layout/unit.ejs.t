@@ -1,5 +1,5 @@
 ---
-to: "src/router/layouts/<%= h.changeCase.kebab(name) %>.unit.js"
+to: "src/router/layouts/<%= h.changeCase.kebab(name) %>.unit.ts"
 ---
 <%
   const fileName = h.changeCase.kebab(name)
