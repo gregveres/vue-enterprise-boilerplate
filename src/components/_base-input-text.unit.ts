@@ -1,10 +1,11 @@
+import { mount } from "@vue/test-utils";
 import BaseInputText from './_base-input-text.vue'
 
 describe('@components/_base-input-text', () => {
   it('works with v-model', () => {
     const wrapper = mount(BaseInputText, { propsData: { value: 'aaa' } })
     const inputWrapper = wrapper.find('input')
-    const inputEl = inputWrapper.element
+    const inputEl:HTMLInputElement = inputWrapper.element as HTMLInputElement;
 
     // Has the correct starting value
     expect(inputEl.value).toEqual('aaa')

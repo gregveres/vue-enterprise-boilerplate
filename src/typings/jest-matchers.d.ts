@@ -3,9 +3,9 @@ export {};
 declare global {
   namespace jest {
     interface Matchers<R> {
-      toBeAComponent(component: Component): R;
-      toBeAViewComponent(component: Component, mockInstance?: VueConstructor): R;
-      toBeAViewComponentUsing(component: Component, mockInstance: VueConstructor): R;
+      toBeAComponent(): R;
+      toBeAViewComponent(mockInstance?: VueConstructor): R;
+      toBeAViewComponentUsing(mockInstance: VueConstructor): R;
       toBeAVuexModule(): R;
     }
   }

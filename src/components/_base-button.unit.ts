@@ -1,3 +1,4 @@
+import { shallowMount } from "@vue/test-utils";
 import BaseButton from './_base-button.vue'
 
 describe('@components/_base-button', () => {
