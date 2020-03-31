@@ -5,13 +5,13 @@ to: "src/components/<%= h.changeCase.kebab(name).toLowerCase().slice(0, 5) === '
 if (blocks.indexOf('script') !== -1) {
 %><script>
 import { defineComponent } from '@vue/composition-api';
+
 export default defineComponent({
+  name: '<%= name %>',
   props: {}, // this is needed to ensure that vue-test-utils.mount takes this as a properly typed component
   setup() {
-
-  }
-  <% if (blocks.indexOf('template') === -1) {
-  %>render(h) {
+  }<% if (blocks.indexOf('template') === -1) {%>,
+  render(h) {
     return <div/>
   }<% } %>
 });
@@ -22,7 +22,8 @@ export default defineComponent({
 if (blocks.indexOf('template') !== -1) {
 %>
 <template>
-  <div/>
+  <div>
+  </div>
 </template>
 <%
 }
