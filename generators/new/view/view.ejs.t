@@ -6,15 +6,19 @@ to: "src/router/views/<%= h.changeCase.kebab(name) %>.vue"
   const importName = h.changeCase.pascal(fileName)
   const titleName = h.changeCase.title(name)
 %><script>
+import { defineComponent } from '@vue/composition-api';
 import Layout from '@layouts/main.vue'
 
-export default {
+export default defineComponent({
   page: {
     title: '<%= titleName %>',
     meta: [{ name: 'description', content: 'The <%= titleName %> page.' }],
   },
-  components: { Layout }
-}
+  components: { Layout },
+  Setup() {
+
+  }
+});
 </script>
 
 <template>
