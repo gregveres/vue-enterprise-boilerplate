@@ -5,7 +5,7 @@ import VueRouter from 'vue-router'
 // https://github.com/declandewet/vue-meta
 import VueMeta from 'vue-meta'
 // Adds a loading bar at the top during page loads.
-import NProgress from 'nprogress/nprogress'
+import NProgress from 'nprogress'
 
 Vue.use(VueRouter)
 Vue.use(VueMeta, {
@@ -80,7 +80,7 @@ router.beforeResolve(async (routeTo, routeFrom, next) => {
         // If a `beforeResolve` hook is defined, call it with
         // the same arguments as the `beforeEnter` hook.
         if (route.meta && route.meta.beforeResolve) {
-          route.meta.beforeResolve(routeTo, routeFrom, (...args) => {
+          route.meta.beforeResolve(routeTo, routeFrom, (...args: any) => {
             // If the user chose to redirect...
             if (args.length) {
               // If redirecting to the same route we're coming from...

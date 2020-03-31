@@ -4,12 +4,17 @@ to: "src/components/<%= h.changeCase.kebab(name).toLowerCase().slice(0, 5) === '
 <%
 if (blocks.indexOf('script') !== -1) {
 %><script>
-export default {
+import { defineComponent } from '@vue/composition-api';
+export default defineComponent({
+  props: {}, // this is needed to ensure that vue-test-utils.mount takes this as a properly typed component
+  setup() {
+
+  }
   <% if (blocks.indexOf('template') === -1) {
   %>render(h) {
     return <div/>
   }<% } %>
-}
+});
 </script>
 <%
 }

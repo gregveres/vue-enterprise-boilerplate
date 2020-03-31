@@ -1,4 +1,4 @@
-import router from '@router';
+import router from '@router/index';
 import store from '@state/store';
 import App from './app.vue';
 import Vue from 'vue';
@@ -22,10 +22,11 @@ const app = new Vue({
   render: (h) => h(App),
 }).$mount('#app');
 
+// TODO: get Cypress running
 // If running e2e tests...
-if (process.env.VUE_APP_TEST === 'e2e') {
-  // Attach the app to the window, which can be useful
-  // for manually setting state in Cypress commands
-  // such as `cy.logIn()`.
-  window.__app__ = app;
-}
+// if (process.env.VUE_APP_TEST === 'e2e') {
+//   // Attach the app to the window, which can be useful
+//   // for manually setting state in Cypress commands
+//   // such as `cy.logIn()`.
+//   window.__app__ = app;
+// }

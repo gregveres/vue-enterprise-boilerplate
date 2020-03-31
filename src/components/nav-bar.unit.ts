@@ -10,7 +10,7 @@ interface NavRoute {
 }
 describe('@components/nav-bar', () => {
   it(`displays the user's name in the profile link`, () => {
-    const { vm } = shallowMount(
+    const vm:any = shallowMount(
       NavBar,
       createComponentMocks({
         store: {
@@ -26,9 +26,9 @@ describe('@components/nav-bar', () => {
           },
         },
       })
-    )
+    ).vm;
 
-    const profileRoute = (vm as any).loggedInNavRoutes.find(
+    const profileRoute = vm.loggedInNavRoutes.find(
       (route: NavRoute) => route.name === 'profile'
     )
     expect(profileRoute.title()).toEqual('Logged in as My Name')

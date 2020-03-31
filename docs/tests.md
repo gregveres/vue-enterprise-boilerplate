@@ -8,6 +8,8 @@
     - [Unit test files](#unit-test-files)
     - [Unit test helpers](#unit-test-helpers)
     - [Unit test mocks](#unit-test-mocks)
+    - [Running unit tests in VSCode](#running-unit-tests-in-VSCode)
+    - [Debugging unit tests in VSCode](#debugging-unit-tests-in-VSCode)
   - [End-to-end tests with Cypress](#end-to-end-tests-with-cypress)
     - [Running end-to-end tests](#running-end-to-end-tests)
     - [Introduction to Cypress](#introduction-to-cypress)
@@ -63,6 +65,30 @@ Jest offers many tools for mocks, including:
 - [For a source file](https://facebook.github.io/jest/docs/en/manual-mocks.html#mocking-user-modules), add the mock to a `__mocks__` directory adjacent to the file.
 - [For a dependency in `node_modules`](https://facebook.github.io/jest/docs/en/manual-mocks.html#mocking-node-modules), add the mock to `tests/unit/__mocks__`. You can see an example of this with the `axios` mock, which intercepts requests with relative URLs to either [our mock API](#the-mock-api) or a local/live API if the `API_BASE_URL` environment variable is set.
 
+### Running unit tests in VSCode
+
+This boilerplate suggests a VSCode extension called vscode-jest. If you search for it in the extensions list, it is just listed as "jest". This extension adds pass/fail indicators beside each test. If it shows a green check, then it has passed. If it shows a red x, then the test failed and there will be a full line red squiggle on the assertion that failed.
+
+By default the automatic test running is turned off when you start up VS Code. To start the automatic watching of the unit tests files and running of the tests every time you save a file, you need to execute a command in VS Code. Bring up the command pallet (ctrl-shift-p) and type 'jest start runner'. This will turn on the automatic running.
+
+If you want to see the command line output of your tests, then select "OUTPUT" on the terminal window, then select output for "Jest (`<your_project_name>`)". Every time the unit test are run, the output will show up there.
+
+### Debugging unit tests in VSCode
+
+There is a launch.json (src/.vscode/launch.json) file setup to debug the current unit test file. To debug a unit test do the following:
+
+- open the unit test file
+- put a break point on the line you want to stop on (click in the gutter of the window)
+- switch to the debugger side panel (the icon is the play triangle with the bug)
+- at the top of the window you will see a green arrow next to a drop down. There should only be one item in the drop down that says vscode-jest-tests
+- click the green arrow to start the run
+- a debugging tool pallet will show up for step over, into etc.
+- the test will execute and stop on your break point.
+
+To view the javascript console, you use the terminal window again, this time select the "DEBUG CONSOLE" tab. There you will see any console.log strings and the text entry at the bottom of the window is for your console commands, say for viewing any expressions.
+
+You can also view variables etc in the debug side panel.
+
 ## End-to-end tests with Cypress
 
 ### Running end-to-end tests
@@ -92,8 +118,8 @@ Beyond that, also know that you can access our app in Cypress on the `window`. F
 
 ```js
 cy.window().then((window) => {
-  return window.__app__.$store.dispatch('someModule/someAction')
-})
+  return window.__app__.$store.dispatch('someModule/someAction');
+});
 ```
 
 ### Accessibility-driven end-to-end tests
@@ -106,39 +132,39 @@ Ideally, tests should only fail when either:
 Unfortunately, there are _a lot_ of ways to get this wrong. For example, when creating a selector for a login link:
 
 ```js
-cy.get('a')
+cy.get('a');
 // Too general, as there could be many links
 
-cy.get('.login-link')
+cy.get('.login-link');
 // Tied to implementation detail of CSS
 
-cy.get('#login-link')
+cy.get('#login-link');
 // Tied to implementation detail of JS and prevents component reusability
 
-cy.contains('Log in')
+cy.contains('Log in');
 // Assumes the text only appears in one context
 ```
 
 To create the right selector, think from the perspective of the user. What _exactly_ are they looking for? They're not looking for:
 
 ```js
-cy.get('a')
+cy.get('a');
 // Any link
 
-cy.get('.login-link')
+cy.get('.login-link');
 // An element with a specific class
 
-cy.get('#login-link')
+cy.get('#login-link');
 // An element with a specific id
 
-cy.contains('Log in')
+cy.contains('Log in');
 // Specific text anywhere on the page
 ```
 
 But rather:
 
 ```js
-cy.contains('a', 'Log in')
+cy.contains('a', 'Log in');
 // A link containing the text "Log in"
 ```
 
@@ -161,7 +187,7 @@ For example, let's imagine you replaced "Log in" with an icon:
 Now users browsing your page with a screen reader will have no way to find the login link. From their perspective, this is just a link with no content. You may be tempted to try to fix the test with something like:
 
 ```js
-cy.get('a[href="/login"]')
+cy.get('a[href="/login"]');
 // A link going to "/login"
 ```
 
@@ -178,7 +204,7 @@ Instead, thinking from a user's perspective forces you to stay accessible, perha
 Then the selector in your test can update as well:
 
 ```js
-cy.get('a[aria-label*="Log in"]')
+cy.get('a[aria-label*="Log in"]');
 // A link with a label containing the text "Log in"
 ```
 

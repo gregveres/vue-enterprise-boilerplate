@@ -2,7 +2,18 @@
   "script": {
     "scope": "vue",
     "prefix": "script",
-    "body": ["<script>", "export default {", "\t${0}", "}", "</script>"],
+    "body": [
+      "<script>",
+      "import { defineComponent } from '@vue/composition-api';",
+      "",
+      "export default defineComponent({",
+      "props: {}, // this is needed to ensure that vue-test-utils.mount takes this as a properly typed component",
+      "setup() {",
+      "\t${0}",
+      "}",
+      "});",
+      "</script>"
+    ],
     "description": "<script>"
   },
   "template": {

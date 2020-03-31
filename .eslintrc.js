@@ -4,6 +4,7 @@ module.exports = {
   parserOptions: {
     sourceType: 'script',
     parser: '@typescript-eslint/parser',
+    ecmaVersion: 2020,
   },
 
   extends: [
@@ -24,8 +25,11 @@ module.exports = {
     'no-console': process.env.PRE_COMMIT
       ? ['error', { allow: ['warn', 'error'] }]
       : 'off',
+    // Chris had these set to error. the parent imports flagged node_modules as errors
+    // import/order goes against my beliefs for import order.
     'import/no-relative-parent-imports': 'off',
     'import/order': 'off',
+
     'vue/array-bracket-spacing': 'error',
     'vue/arrow-spacing': 'error',
     'vue/block-spacing': 'error',
