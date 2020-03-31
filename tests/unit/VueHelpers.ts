@@ -1,7 +1,8 @@
+import Vue from "vue";
 import Vuex, { StoreOptions, Store } from "vuex";
 import axios from "axios";
 import { cloneDeep } from "lodash";
-import { createLocalVue } from "@vue/test-utils";
+import { createLocalVue, shallowMount, VueClass, Wrapper } from "@vue/test-utils";
 import { authState } from "@state/modules/auth";
 import { VueConstructor } from 'vue/types/umd';
 
@@ -11,6 +12,23 @@ export interface componentMocks {
   mocks?: any;
   store?: Store<unknown>;
 }
+
+// A special version of `shallowMount` for view components
+export function shallowMountView<v extends Vue>(Component: VueClass<v>, options: any = {}): Wrapper<v> {
+  return shallowMount(Component, {
+    ...options,
+    stubs: {
+      Layout: {
+        functional: true,
+        render(h, { slots }) {
+          return h('div', slots().default);
+        },
+      },
+      ...(options.stubs || {}),
+    },
+  });
+};
+
 
 // A helper for creating Vue component mocks
 export function createComponentMocks({ store, router, style, mocks, stubs }: any) {

@@ -1,3 +1,4 @@
+import { shallowMountView } from "@/tests/unit/VueHelpers";
 import Profile from './profile.vue'
 
 describe('@views/profile', () => {

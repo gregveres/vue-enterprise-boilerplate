@@ -1,9 +1,13 @@
 <script>
-import NavBar from '@components/nav-bar.vue'
+import { defineComponent } from '@vue/composition-api';
+import NavBar from '@components/nav-bar.vue';
 
-export default {
+export default defineComponent({
   components: { NavBar },
-}
+  setup() {
+    /* empty */
+  },
+});
 </script>
 
 <template>

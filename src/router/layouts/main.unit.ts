@@ -1,3 +1,4 @@
+import { shallowMount } from '@vue/test-utils'
 import MainLayout from './main.vue'
 
 describe('@layouts/main.vue', () => {

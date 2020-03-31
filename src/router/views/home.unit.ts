@@ -1,3 +1,4 @@
+import { shallowMountView } from "@/tests/unit/VueHelpers";
 import Home from './home.vue'
 
 describe('@views/home', () => {
